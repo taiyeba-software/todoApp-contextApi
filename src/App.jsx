@@ -1,39 +1,26 @@
 import { useState } from 'react'
 import { TodoProvider } from './context'
-/*
-যখন তুই লেখস import { TodoProvider } from './context', তখন:
-
-JavaScript engine বা bundler (যেমন Vite, Webpack, ইত্যাদি) অটো খুঁজে দেখে ./context ফোল্ডারে কি কোনো index.js বা index.jsx ফাইল আছে কিনা।
-
-যদি পাই, তখন ধরে নেয়—"ওকে, তুমি চাইতেছো ./context/index.jsx এর ভিতরের জিনিস!"
-
-অতএব, যদি TodoProvider named export হয় ওই index.jsx ফাইলে (বা ওখানে TodoContext.jsx থেকে import করা হয়), তাহলে সব কাজ একদম মাখনের মতো হয়ে যায়
-*/
 import './App.css'
 
 function App() {
 
   const [todos, setTodos] = useState([])
-  /*
-    This is array destructuring. React gives you: <br> - todos: current value of the state <br> - setTodos: function to update that state
-    💥Like saying: “Hey React, give me the value and the tool to change it”
+    const addTodo = (todo)=>{
+      setTodos((prev)=>[{id:Date.now(),...todo}, ...prev])
+    }
 
-        const newTodo = {
-      id: Date.now(), // gives a unique ID using timestamp
-      todo: inputValue, // the text entered by the user
-      completed: false // by default, not completed
-    };
-    setTodos([...todos, newTodo]);
-    };
-  */
+    const updateTodo =(id,todo)=>{
+      setTodos((prev)=>prev.map((prevTodo)=>(prevTodo.id===id? todo : prevTodo)))
+    }
 
-  const addTodo = (todo)=>{
-    setTodos((prev)=>[{id:Date.now(),...todo},...prev])
-  }
+    const  deleteTodo =(id)=>{
+      setTodos((prev)=>prev.filter((todo)=>todo.id!==id))
+    }
 
-  const updatetodo =(id,todo)=>{
-    setTodos((prev)=>prev.map((prevTodo)=>(prevTodo.id===id? todo : prevTodo)))
-  }
+    const toggleComplete=(id)=>{
+      setTodos((prev)=>prev.map((prevTodo)=>prevTodo==id?{...prevTodo,completed:!prevTodo.completed}:prevTodo))
+    }
+
   return (
     <TodoProvider value={{todos,addTodo,updateTodo,deleteTodo,toggleComplete}}>
       <div className="bg-[#172842] min-h-screen py-8">
